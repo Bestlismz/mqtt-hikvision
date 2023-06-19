@@ -1,14 +1,13 @@
+require('dotenv').config()
 const http = require('http');
 const fs = require('fs');
-const connectMqtt = require('./controller/mqtt')
-////////////test on pc//////////////
-const serverIP = '192.168.100.122';
-const serverPort = '8080';
-///////////////////////////////////
+const connectMqtt = require('./controller/mqtt');
+// const {serverPort,serverIP} = process.env;
+
 let data = '';
 
-
-//connectMqtt.waitData()
+// console.log("ip : ",process.env)
+connectMqtt.waitData()
 
 const server = http.createServer((req, res) => {
   // Handle incoming requests
@@ -74,8 +73,8 @@ const server = http.createServer((req, res) => {
 const startServer = async () => {
   try {
     // const channel = await connectToRabbitMQ();
-    server.listen(serverPort, serverIP, () => {
-      console.log(`Server running at ${serverIP}:${serverPort}`);
+    server.listen(process.env.SERVER_PORT,process.env.SERVER_IP, () => {
+      console.log(`Server running at ${process.env.SERVER_IP}:${process.env.SERVER_PORT}`);
     });
   } catch (error) {
     console.error(error.message);
