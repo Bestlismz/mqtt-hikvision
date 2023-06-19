@@ -1,8 +1,7 @@
 require('dotenv').config();
 const amqp = require('amqplib');
 const brokerUrl = `amqp://${process.env.MQTT_USERNAME}:${process.env.MQTT_PASSWORD}@${process.env.MQTT_HOSTNAME}`;
-console.log(brokerUrl)
-const queue = '${MQTT_QUEUE}';
+const queue = `${process.env.MQTT_QUEUE}`;
 
 // Connect to RabbitMQ
 async function connectToRabbitMQ(message) {

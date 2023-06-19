@@ -7,7 +7,7 @@ const connectMqtt = require('./controller/mqtt');
 let data = '';
 
 // console.log("ip : ",process.env)
-connectMqtt.waitData()
+//connectMqtt.waitData()
 
 const server = http.createServer((req, res) => {
   // Handle incoming requests
