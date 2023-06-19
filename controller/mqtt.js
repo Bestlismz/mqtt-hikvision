@@ -1,6 +1,7 @@
+require('dotenv').config();
 const amqp = require('amqplib');
-const brokerUrl = 'amqp://letmeinThericeLpr:Uk9Jn3SO40zANzf@mqtt.letmein.asia/'; 
-const queue = 'lprTherice';
+const brokerUrl = 'amqp://${MQTT_USERNAME}:${MQTT_PASSWORD}@${MQTT_HOSTNAME}/'; 
+const queue = '${MQTT_QUEUE}';
 
 // Connect to RabbitMQ
 async function connectToRabbitMQ(message) {
@@ -22,7 +23,7 @@ async function connectToRabbitMQ(message) {
     throw new Error('Error connecting to RabbitMQ: ' + error.message);
   }
 };
-
+//see data
 async function waitData() {
     try {
       const connection = await amqp.connect(brokerUrl);

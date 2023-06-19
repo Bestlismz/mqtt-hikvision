@@ -3,11 +3,12 @@ const fs = require('fs');
 const connectMqtt = require('./controller/mqtt')
 
 const serverIP = '192.168.100.122';
-const serverPort = 8081;
+const serverPort = '8080';
 
 let data = '';
 
-connectMqtt.waitData()
+
+//connectMqtt.waitData()
 
 const server = http.createServer((req, res) => {
   // Handle incoming requests
@@ -32,7 +33,8 @@ const server = http.createServer((req, res) => {
       ? requestData.substring(dateTimeIndexStart + dateTimeStartTag.length, dateTimeIndexEnd).trim()
       : '';
     let textData = '';
-    if (licensePlate !== 'unknown') {
+    const checkZero = ['000','0000','00000','000000','0000000','00000000','000000000','0000000000']
+    if (licensePlate !== 'unknown' && !checkZero.includes(licensePlate)) {
       textData = licensePlate.toString();
       console.log('License plate:', textData);
       connectMqtt.connectToRabbitMQ(textData)
@@ -73,7 +75,7 @@ const startServer = async () => {
   try {
     // const channel = await connectToRabbitMQ();
     server.listen(serverPort, serverIP, () => {
-      console.log(`Server running at http://${serverIP}:${serverPort}/`);
+      console.log(`Server running at ${serverIP}:${serverPort}`);
     });
   } catch (error) {
     console.error(error.message);
