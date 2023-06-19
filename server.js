@@ -5,7 +5,6 @@ const connectMqtt = require('./controller/mqtt');
 // const {serverPort,serverIP} = process.env;
 
 let data = '';
-
 // console.log("ip : ",process.env)
 //connectMqtt.waitData()
 
