@@ -1,10 +1,10 @@
 const http = require('http');
 const fs = require('fs');
 const connectMqtt = require('./controller/mqtt')
-
+////////////test on pc//////////////
 const serverIP = '192.168.100.122';
 const serverPort = '8080';
-
+///////////////////////////////////
 let data = '';
 
 
