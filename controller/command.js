@@ -15,7 +15,6 @@ async function callBarrierGateAPI() {
       });
   };
 
-
   async function check_license_plate(license_plate){
     const post = new FormData
     post.append('license_plate',license_plate)
@@ -30,5 +29,5 @@ async function callBarrierGateAPI() {
 
 module.exports = {
   callBarrierGateAPI,
-  check_license_plate
+  check_license_plate,
 }

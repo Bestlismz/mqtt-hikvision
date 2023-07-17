@@ -19,19 +19,22 @@ const server = http.createServer((req, res) => {
     const happenTime = json.params.events[0].happenTime;
     const picture = json.params.events[0].data.vehiclePicUri;
     const Name = json.params.events[0].srcName;
+
+    //check log come in
+    console.log('\n*Check Log come in : ',licensePlate);
     
     //console.log(requestData);   //=> check all log
     try {
       if (licensePlate !== null && licensePlate !== 'Unknown' && !checkZero.includes(licensePlate)){
 
-      console.log('');
+      console.log('\n');
       console.log('================================');
       console.log('Name Device: ',Name);
       console.log('Plate Number: ', licensePlate);
-      connectMqtt.connectToRabbitMQ(licensePlate);
+      await connectMqtt.connectToRabbitMQ(licensePlate);
       console.log('Time: ',happenTime);
       console.log('Picture: ',picture);
-      await command.callBarrierGateAPI();
+      command.callBarrierGateAPI();
       }
     } catch (error) {
       console.error('Error:', error);
