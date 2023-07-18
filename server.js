@@ -1,43 +1,63 @@
-require('dotenv').config();
-const axios = require('axios');
-const connectMqtt = require('./controller/mqtt');
-const command = require('./controller/command');
-const http = require('http');
+require("dotenv").config();
+const axios = require("axios");
+const connectMqtt = require("./controller/mqtt");
+const command = require("./controller/command");
+const http = require("http");
 
-
-let data = '';
+let data = "";
 
 const server = http.createServer((req, res) => {
-  let requestData = '';
-  req.on('data', (chunk) => {
+  let requestData = "";
+  req.on("data", (chunk) => {
     requestData += chunk;
   });
-  req.on('end', async () => {
-    const checkZero = ['000','0000','00000','000000','0000000','00000000','000000000','0000000000'];
+  req.on("end", async () => {
+    const checkZero = [
+      "000",
+      "0000",
+      "00000",
+      "000000",
+      "0000000",
+      "00000000",
+      "000000000",
+      "0000000000",
+    ];
     const json = JSON.parse(requestData);
     const licensePlate = json.params.events[0].data.plateNo;
     const happenTime = json.params.events[0].happenTime;
     const picture = json.params.events[0].data.vehiclePicUri;
     const Name = json.params.events[0].srcName;
+    const Group = json.params.events[0].vehicleGroupIndexCode;
 
     //check log come in
-    console.log('\n*Check Log come in : ',licensePlate);
-    
+    //console.log('\n*Check Log come in : ',licensePlate);
+
     //console.log(requestData);   //=> check all log
     try {
-      if (licensePlate !== null && licensePlate !== 'Unknown' && !checkZero.includes(licensePlate)){
+      if (
+        licensePlate !== null &&
+        licensePlate !== "Unknown" &&
+        !checkZero.includes(licensePlate)
+      ) {
+        console.log("\n");
+        console.log("[" + Name + "]");
+        console.log("================================");
+        console.log("Plate Number: ", licensePlate);
+        connectMqtt.connectToRabbitMQ(licensePlate);
+        console.log("Time: ", happenTime);
+        console.log("Picture: ", picture);
 
-      console.log('\n');
-      console.log('================================');
-      console.log('Name Device: ',Name);
-      console.log('Plate Number: ', licensePlate);
-      await connectMqtt.connectToRabbitMQ(licensePlate);
-      console.log('Time: ',happenTime);
-      console.log('Picture: ',picture);
-      command.callBarrierGateAPI();
+        //callBarrierGate
+        if (
+          process.env.CAMERA_GATE_IN == Name && Group !== null) {
+          command.callBarrierGateAPI();
+        }
+        if (process.env.CAMERA_GATE_OUT == Name) {
+          command.callBarrierGateAPI();
+        }
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
     //   const check_licenplate = await command.check_license_plate(textData)
     //   if(check_licenplate) {
