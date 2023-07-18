@@ -27,7 +27,7 @@ const server = http.createServer((req, res) => {
     const happenTime = json.params.events[0].happenTime;
     const picture = json.params.events[0].data.vehiclePicUri;
     const Name = json.params.events[0].srcName;
-    const Group = json.params.events[0].vehicleGroupIndexCode;
+    const Group = json.params.events[0].data.vehicleGroupIndexCode;
 
     //check log come in
     //console.log('\n*Check Log come in : ',licensePlate);
@@ -48,11 +48,11 @@ const server = http.createServer((req, res) => {
         console.log("Picture: ", picture);
 
         //callBarrierGate
-        if (
-          process.env.CAMERA_GATE_IN == Name && Group !== null) {
-          command.callBarrierGateAPI();
+        if (process.env.CAMERA_GATE_IN == Name) {
+          console.log("VehicleGroup: ",Group);
         }
-        if (process.env.CAMERA_GATE_OUT == Name) {
+        if (process.env.CAMERA_GATE_OUT == Name && Group !== undefined) {
+          console.log("VehicleGroup: ", Group);
           command.callBarrierGateAPI();
         }
       }
@@ -74,7 +74,9 @@ const server = http.createServer((req, res) => {
 const startServer = async () => {
   try {
     server.listen(process.env.SERVER_PORT, process.env.SERVER_IP, () => {
-      console.log(`Server running at ${process.env.SERVER_IP}:${process.env.SERVER_PORT}`);
+      console.log(
+        `Server running at ${process.env.SERVER_IP}:${process.env.SERVER_PORT}`
+      );
     });
   } catch (error) {
     console.error(error.message);
